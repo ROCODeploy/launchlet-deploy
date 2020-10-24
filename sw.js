@@ -29,14 +29,17 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 
 			// DATA
 
-			_DataCacheName: 'OLSKServiceWorkerCache-1597437829246',
+			_DataVersionCacheName: 'OLSKServiceWorkerVersionCache-1603555214334',
+			_DataPersistenceCacheName: 'OLSKServiceWorkerPersistenceCache',
 			_DataOriginPage: '/compose',
 
 			// CONTROL
 
 			async ControlClearCache () {
 				return Promise.all(
-					(await mod._ValueCaches.keys()).map(function (e) {
+					(await mod._ValueCaches.keys()).filter(function (e) {
+						return e !== mod._DataPersistenceCacheName;
+					}).map(function (e) {
 						return mod._ValueCaches.delete(e);
 					})
 				);
@@ -57,7 +60,7 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 					return;
 				}
 
-				if (event.request.mode === 'cors') {
+				if (event.request.mode === 'cors' && !event.request.url.match(/^https\:\/\/rosano\.ca\/api/)) {
 					return;
 				}
 
@@ -83,7 +86,7 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 					let networkResponse = param4 ? await fetch(event.request) : await mod._ValueFetch(event.request);
 
 					if (networkResponse.status === 200) {
-						(await mod._ValueCaches.open(mod._DataCacheName)).put(event.request, networkResponse.clone());
+						(await mod._ValueCaches.open(event.request.url.match(/^https\:\/\/rosano\.ca\/api/) ? mod._DataPersistenceCacheName : mod._DataVersionCacheName)).put(event.request, networkResponse.clone());
 					}
 
 					return networkResponse;
@@ -92,7 +95,11 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 
 			OLSKServiceWorkerDidReceiveMessage (event) {
 				if (event.data.action === 'skipWaiting') {
-				  mod._ValueSelf.skipWaiting();
+				  return mod._ValueSelf.skipWaiting();
+				}
+
+				if (event.data === 'OLSKServiceWorkerClearVersionCacheMessage') {
+				  return mod.ControlClearCache();
 				}
 			},
 		
