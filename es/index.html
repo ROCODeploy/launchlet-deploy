@@ -1,13 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 	<title>Launchlet</title>
-	<meta name="description" content="Interfaz generalizada para la interacción con el teclado" />
+	<meta name="description" content="Personalizar la web con JavaScript y CSS" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta name="viewport" content="width=device-width">
 	<link rel="canonical" href="/" />
 	<link rel="alternate" hreflang="en" href="/en/" />
@@ -18,7 +14,7 @@
 			return {"OLSKSharedPageCurrentLanguage":"es"}[inputData];
 		};
 	</script>
-	<link rel="apple-touch-icon" href="https://launchlet.s3.amazonaws.com/public/identity.jpg">
+	<link rel="apple-touch-icon" href="https://rosano.s3.amazonaws.com/public/launchlet/identity.jpg">
 	<link rel="stylesheet" type="text/css" href="/_shared/__external/normalize.css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="/_shared/__external/OLSKLayout/ui-style.css">
 	<link rel="stylesheet" type="text/css" href="/_shared/common/ui-style.css">
@@ -29,6 +25,7 @@
 </head>
 
 <body>
+
 
 
 <div class="LCHVitrine OLSKCommon">
@@ -60,29 +57,30 @@
 </div>
 
 
-<hr>
+<hr role="presentation" />
 
-<div class="LCHVitrineIdentity">
+<div class="LCHVitrineIdentity OLSKCommonCard OLSKCommonIdentityCard">
 	<img class="LCHVitrineIdentityLogo" src="/_shared/LCHRootLink/ui-assets/identity.svg" role="presentation" />
-	<h1 class="LCHVitrineIdentityName">Launchlet</h1>
+	<section>
+		<span class="LCHVitrineIdentityName">Launchlet</span>
+		<span class="LCHVitrineIdentityBlurb">Personalizar la web con JavaScript y CSS</span>
+	</section>
 </div>
 
 <article class="LCHVitrineContent">
 
-<p><em>Interfaz generalizada para la interacción con el teclado</em></p>
-<p>Launchlet es una manera sencilla para dar un nombre a fragmentos de código y ejecutarlo. Inspirado par <a href="https://qsapp.com">Quicksilver</a>, funcione primeramente por interacción sin ratón y te permite de acceder tus <a href="/guide">Recetas</a> con poco de golpes del teclado. Puedes también utilizarlo para personalizar sitios web con tu proprio CSS o JavaScript. Optimizado para la velocidad para que puedas &#39;pensar y después hacer&#39;.</p>
-<p>Puedes ejecutar Launchlet como bookmarklet, <a href="https://github.com/launchlet/launchlet-extension">extensión del navegador</a>, o como un <a href="https://github.com/launchlet/launchlet/blob/master/os-app/dev-package/README.md">módulo</a> en tu proprio proyecto para añadir una &#39;saltar a&#39; funcionalidad.</p>
-<p>El código fuente es código abierto y disponible en <a href="https://github.com/launchlet/launchlet">GitHub</a>.</p>
-<p>El proyecto es libremente accesible y gratis, pero si estás en posición a dar, por favor <a href="https://rosano.ca/donate">dona</a> para sostener su desarrollo en futuro.</p>
-<hr>
-<h1>El app</h1>
-<p>Hay también un app donde puedes crear un lanzador personalizado con tus prorios Recetas.</p>
-<h2>Características</h2>
+<p>Launchlet es una manera sencilla para dar un nombre a fragmentos de código y ejecutarlo. Inspirado par <a href="https://qsapp.com">Quicksilver</a>, te permite de lograr más con el teclado.</p>
+<p>Puedes ejecutar Launchlet como bookmarklet, <a href="https://github.com/launchlet/launchlet-extension">extensión del navegador</a>, o como un módulo en tu proprio proyecto para añadir una &#39;saltar a&#39; funcionalidad.</p>
+<p>Lea el <a href="/guide">guide</a> para aprender más.</p>
+<p><a class="LCHVitrineContentAppButton OLSKCommonButton OLSKCommonButtonPrimary" href="/compose">Abrir app</a></p>
+<h1 id="características">Características</h1>
 <ul>
 <li>Crear Recetas con JavaScript</li>
 <li>Crear Recetas con CSS</li>
 <li>Poner un filtro de URL en Recetas</li>
-<li>Emparejar el app con el extensión del navigador</li>
+<li>Emparejar el app con extensión del navigador</li>
+<li>Sincronizar automáticamente con extensión del navigador</li>
+<li>Exportar bookmarklet</li>
 <li>Sincronizar com múltiples dispositivos con remoteStorage</li>
 <li>Foncione offline sin acceso al internet</li>
 <li>Interfaz sencilla</li>
@@ -91,9 +89,8 @@
 <li>Sin análisis comportamental o rastreadores terceros</li>
 <li>Foncione en dispositivos mobiles, tabletas y computadoras</li>
 </ul>
-<p><a class="LCHVitrineContentAppButton OLSKCommonButton" href="/compose">Ir al app</a></p>
-<h1>Demostraciones</h1>
-<h2>Modo de &#39;Commit&#39;</h2>
+<h1 id="demostraciones">Demostraciones</h1>
+<h2 id="modo-de-commit">Modo de &#39;Commit&#39;</h2>
 <p>Mostrar una lista de opciónes y ejecutar al <code>Enter</code>. Intenta cualquier de las opciones siguientes:</p>
 <ul>
 <li><code>Aleatorizar los colores de la página</code></li>
@@ -101,10 +98,10 @@
 <li><code>Enviar correo</code></li>
 </ul>
 <p><button class="LCHVitrineDemoButtonCommit" onclick="LCHVitrineBehaviour.InterfaceDemoButtonCommitDidClick()">Demo modo de Commit</button></p>
-<h2>Modo de &#39;Preview&#39;</h2>
+<h2 id="modo-de-preview">Modo de &#39;Preview&#39;</h2>
 <p>Mostrar una lista de opciónes y ejecutar a la selección. Intenta de saltar a través los títulos en este documento:</p>
 <p><button class="LCHVitrineDemoButtonPreview" onclick="LCHVitrineBehaviour.InterfaceDemoButtonPreviewDidClick()">Demo modo de Preview</button></p>
-<h2>Modo de &#39;Pipe&#39;</h2>
+<h2 id="modo-de-pipe">Modo de &#39;Pipe&#39;</h2>
 <p>Organizar los artículos en sujetos y actos. Intenta</p>
 <ul>
 <li><code>Marcar los enlaces de la página</code> y <code>Ejecutar comando</code></li>
@@ -116,15 +113,15 @@
 
 </article>
 
-<hr />
+<hr role="presentation" />
 
 <img class="LCHVitrineBrueghel" src="/brueghel.jpg" alt="Una foto de una tarjeta postal que contiene una pintura de Pieter Bruegel : La caída de los ángeles rebeldes"/>
 
-<hr />
+<hr role="presentation" />
 
 <div class="ROCORootLink">
 
-<a class="OLSKRootLink OLSKCommonIdentity" href="https://rosano.ca" title="Visitar rosano.ca">
+<a class="OLSKRootLink OLSKCommonRootLink" href="https://rosano.ca" title="Visitar rosano.ca">
 	<img class="OLSKRootLinkImage" role="presentation" src="/_shared/__external/ROCORootLink/identity.svg">
 </a>
 
@@ -134,6 +131,6 @@
 
 </div>
 
+
 </body>
 </html>
-

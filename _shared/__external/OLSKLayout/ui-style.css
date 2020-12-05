@@ -37,7 +37,7 @@
 .OLSKMobileViewInactive:last-child {
 	left: unset;
 	top: 0;
-	right: 100vw;
+	right: 110vw;
 }
 
 .OLSKMobileViewHeader {
@@ -81,7 +81,6 @@
 
 }
 
-
 /* OLSKVisibility */
 
 @media screen and (min-width: 760px) {
@@ -108,6 +107,14 @@
 	/* OLSKToolbarFlexbox:Parent */
 	display: flex; 
 	align-items: center;
+}
+
+.OLSKToolbarBorderTop {
+	border-top: var(--OLSKCommonBorder);
+}
+
+.OLSKToolbarBorderBottom {
+	border-bottom: var(--OLSKCommonBorder);
 }
 
 @media screen and (max-width: 760px) {
@@ -251,7 +258,6 @@
 
 }
 
-
 /* OLSKStorageToolbar */
 
 .OLSKStorageToolbar .OLSKToolbarElementGroup:last-of-type {
@@ -358,13 +364,6 @@
 	font-weight: bold;
 }
 
-/* OLSKApp */
-
-:root {
-	--OLSKAppBorderColor: #ddd;
-	--OLSKAppBorderStyle: 1px solid var(--OLSKAppBorderColor);
-}
-
 /* OLSKCommon */
 
 :root {
@@ -418,6 +417,9 @@
 }
 
 .OLSKCommon h1 {
+	padding-bottom: 2px;
+	border-bottom: 1px solid var(--OLSKCommonForeground);
+
 	font-size: 18pt;
 }
 
@@ -452,7 +454,24 @@ a.OLSKCommonButton {
 	text-decoration: none;
 }
 
-@media (max-width: 760px) {
+.OLSKCommonButtonPrimary {
+	padding: 8px 16px;
+	font-size: 110%;
+}
+
+.OLSKCommonButtonDestructive {
+	border-color: #800002;
+	background: #ffefef;
+	color: #800002;
+}
+
+.OLSKCommonAlert {
+	padding: 10px;
+
+	background: #eeeeee;
+}
+
+/*@media (max-width: 760px) {
 
 .OLSKCommon button, .OLSKCommonButton, .OLSKCommon input[type="submit"] {
 	display: block;
@@ -460,7 +479,7 @@ a.OLSKCommonButton {
 	margin-top: 20px;
 }
 
-}
+}*/
 
 .OLSKCommon code {
 	display: inline-block;
@@ -470,13 +489,47 @@ a.OLSKCommonButton {
 	color: hsl(0, 0%, 20%);
 }
 
-.OLSKCommonIdentity {
+.OLSKCommonRootLink {
 	width: 70px;
 	display: block;
 
 	margin: 30px auto;
 }
 
-.OLSKCommonIdentity img {
+.OLSKCommonRootLink img {
 	width: inherit;
+}
+
+/* OLSKCommonCard */
+
+.OLSKCommonCard {
+	display: flex;
+	align-items: center;
+}
+
+.OLSKCommonCard > img {
+	width: 70px;
+
+	margin-right: 8px;
+}
+
+.OLSKCommonCard > :last-child > :nth-child(1) {
+	display: block;
+	
+	font-weight: bold;
+	font-family: var(--OLSKCommonHeadingFontFamily);
+}
+
+/* OLSKCommonIdentityCard */
+
+.OLSKCommonIdentityCard {
+	margin: 2em 0;
+}
+
+.OLSKCommonIdentityCard > :last-child > :nth-child(1) {
+	font-size: 24pt;
+}
+
+.OLSKCommonIdentityCard > :last-child > :nth-child(2) {
+	font-style: oblique;
 }

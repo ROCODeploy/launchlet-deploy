@@ -1,4 +1,5 @@
-const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
+(function() {
+			const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 		if (typeof param1 !== 'object' || param1 === null) {
 			throw new Error('OLSKErrorInputNotValid');
 		}
@@ -26,10 +27,11 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 			_ValueSelf: param1,
 			_ValueCaches: param2,
 			_ValueFetch: param3,
+			_ValuePersistenceCacheURLs: [],
 
 			// DATA
 
-			_DataVersionCacheName: 'OLSKServiceWorkerVersionCache-1603555720962',
+			_DataVersionCacheName: 'OLSKServiceWorkerVersionCache-1607183811041',
 			_DataPersistenceCacheName: 'OLSKServiceWorkerPersistenceCache',
 			_DataOriginPage: '/compose',
 
@@ -43,6 +45,18 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 						return mod._ValueCaches.delete(e);
 					})
 				);
+			},
+
+			ControlAddPersistenceCacheURL (inputData) {
+				if (typeof inputData !== 'string') {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+
+				if (mod._ValuePersistenceCacheURLs.includes(inputData)) {
+					return;
+				}
+
+				mod._ValuePersistenceCacheURLs.push(inputData);
 			},
 
 			// MESSAGE
@@ -60,7 +74,7 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 					return;
 				}
 
-				if (event.request.mode === 'cors' && !event.request.url.match(/^https\:\/\/rosano\.ca\/api/)) {
+				if (event.request.mode === 'cors' && !mod._ValuePersistenceCacheURLs.includes(event.request.url)) {
 					return;
 				}
 
@@ -77,30 +91,50 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 				// };
 
 				return event.respondWith(async function() {
-					let cacheResponse = await mod._ValueCaches.match(event.request);
+					const cacheResponse = await mod._ValueCaches.match(event.request);
 
 					if (cacheResponse) {
 						return cacheResponse;
 					}
 
-					let networkResponse = param4 ? await fetch(event.request) : await mod._ValueFetch(event.request);
+					const networkResponse = param4 ? await fetch(event.request) : await mod._ValueFetch(event.request);
 
 					if (networkResponse.status === 200) {
-						(await mod._ValueCaches.open(event.request.url.match(/^https\:\/\/rosano\.ca\/api/) ? mod._DataPersistenceCacheName : mod._DataVersionCacheName)).put(event.request, networkResponse.clone());
+						(await mod._ValueCaches.open(mod._ValuePersistenceCacheURLs.includes(event.request.url) ? mod._DataPersistenceCacheName : mod._DataVersionCacheName)).put(event.request, networkResponse.clone());
 					}
 
 					return networkResponse;
 				}());
 			},
 
-			OLSKServiceWorkerDidReceiveMessage (event) {
-				if (event.data.action === 'skipWaiting') {
-				  return mod._ValueSelf.skipWaiting();
+			async OLSKServiceWorkerDidReceiveMessage (event) {
+				const OLSKMessageSignature = event.data.OLSKMessageSignature || event.data;
+
+				if (typeof OLSKMessageSignature !== 'string') {
+					return;
 				}
 
-				if (event.data === 'OLSKServiceWorkerClearVersionCacheMessage') {
-				  return mod.ControlClearCache();
+				if (!OLSKMessageSignature.startsWith('OLSKServiceWorker_')) {
+					return;
 				}
+
+				return event.source.postMessage({
+					OLSKMessageSignature,
+					OLSKMessageArguments: event.data.OLSKMessageArguments,
+					OLSKMessageResponse: await mod[OLSKMessageSignature](...[].concat(event.data.OLSKMessageArguments || [])),
+				});
+			},
+
+			OLSKServiceWorker_ClearVersionCache () {
+				return mod.ControlClearCache();
+			},
+
+			OLSKServiceWorker_SkipWaiting () {
+				return mod._ValueSelf.skipWaiting();
+			},
+
+			OLSKServiceWorker_AddPersistenceCacheURL (inputData) {
+				return mod.ControlAddPersistenceCacheURL(inputData);
 			},
 		
 		};
@@ -108,7 +142,7 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 		return mod;
 	})(self, caches, fetch, true);
 
-(function OLSKServiceWorkerInitialization (param1, param2) {
+			(function OLSKServiceWorkerInitialization (param1, param2) {
 		if (typeof param1 !== 'object' || param1 === null) {
 			throw new Error('OLSKErrorInputNotValid');
 		}
@@ -129,3 +163,4 @@ const mod = (function OLSKServiceWorkerModule (param1, param2, param3, param4) {
 		param1.addEventListener('fetch', param2.OLSKServiceWorkerDidFetch);
 		param1.addEventListener('message', param2.OLSKServiceWorkerDidReceiveMessage);
 	})(self, mod);
+		})();

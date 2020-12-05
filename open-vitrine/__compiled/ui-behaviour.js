@@ -3,6 +3,10 @@ var LCHVitrineBehaviour = (function () {
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
+	function commonjsRequire () {
+		throw new Error('Dynamic requires are not currently supported by rollup-plugin-commonjs');
+	}
+
 	function unwrapExports (x) {
 		return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
 	}
@@ -30,11 +34,11 @@ var LCHVitrineBehaviour = (function () {
 					return false;
 				}
 
-				if (inputData.split('.').shift() !== exports.OLSKInternationalDefaultIdentifier()) {
+				if (inputData.split('.').shift() !== mod.OLSKInternationalDefaultIdentifier()) {
 					return false;
 				}
 
-				if (!exports._OLSKInternationalLanguageID(inputData)) {
+				if (!mod._OLSKInternationalLanguageID(inputData)) {
 					return false;
 				}
 
@@ -42,11 +46,11 @@ var LCHVitrineBehaviour = (function () {
 			},
 
 			OLSKInternationalLanguageID (inputData) {
-				if (!exports.OLSKInternationalIsTranslationFileBasename(inputData)) {
+				if (!mod.OLSKInternationalIsTranslationFileBasename(inputData)) {
 					throw new Error('OLSKErrorInputNotValid');
 				}
 
-				return exports._OLSKInternationalLanguageID(inputData);
+				return mod._OLSKInternationalLanguageID(inputData);
 			},
 
 			OLSKInternationalSimplifiedLanguageCode (inputData) {
@@ -94,7 +98,7 @@ var LCHVitrineBehaviour = (function () {
 				}
 
 				const _locales = Object.keys(dictionary).reverse().concat(...fallbackLocales.map(function (e) {
-						return [exports.OLSKInternationalSimplifiedLanguageCode(e), e]
+						return [mod.OLSKInternationalSimplifiedLanguageCode(e), e]
 					}).reverse());
 
 				return function (signature, requestLocales) {
@@ -103,7 +107,7 @@ var LCHVitrineBehaviour = (function () {
 					}
 
 					let locales = _locales.concat(...requestLocales.map(function (e) {
-						return [exports.OLSKInternationalSimplifiedLanguageCode(e), e]
+						return [mod.OLSKInternationalSimplifiedLanguageCode(e), e]
 					}).reverse(), []);
 
 					let outputData;
@@ -120,6 +124,167 @@ var LCHVitrineBehaviour = (function () {
 				};
 			},
 
+			_OLSKInternationalPaths (cwd, filter) {
+				if (typeof cwd !== 'string' || !cwd.trim()) {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+
+				const _require = commonjsRequire;
+
+				return _require().sync(`**/*${ mod.OLSKInternationalDefaultIdentifier() }*.y*(a)ml`, {
+					cwd,
+					realpath: true,
+				}).filter(function (e) {
+					if (!filter) {
+						return true;
+					}
+
+					return !e.match(filter);
+				}).filter(function (e) {
+					return mod.OLSKInternationalIsTranslationFileBasename(_require().basename(e));
+				});
+			},
+
+			_OLSKInternationalConstructedDictionary (inputData) {
+				if (!Array.isArray(inputData)) {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+
+				const _require = commonjsRequire;
+
+				return inputData.reduce(function (coll, item) {
+					const key = mod.OLSKInternationalLanguageID(_require().basename(item));
+
+					coll[key] = Object.assign(coll[key] || {}, _require().safeLoad(_require().readFileSync(item, 'utf8')));
+
+					return coll;
+				}, {});
+			},
+
+			OLSKInternationalDictionary (cwd) {
+				return this._OLSKInternationalConstructedDictionary(this._OLSKInternationalPaths(cwd));
+			},
+
+			_OLSKInternationalCompilationObject (cwd, languageID) {
+				const _require = commonjsRequire;
+
+				return this._OLSKInternationalPaths(cwd, /node_modules|__external/).filter(function (e) {
+					if (!languageID) {
+						return true;
+					}
+
+					return mod.OLSKInternationalLanguageID(_require().basename(e)) === languageID;
+				}).reduce(function (coll, item) {
+					return Object.assign(coll, {
+						[item]: _require().safeLoad(_require().readFileSync(item, 'utf8')),
+					});
+				}, {});
+			},
+
+			_OLSKInternationalCompilationFilePath (cwd) {
+				if (typeof cwd !== 'string' || !cwd.trim()) {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+				const _require = commonjsRequire;
+
+				return _require().join(cwd, '__compiled', mod.OLSKInternationalDefaultIdentifier() + '-compilation.yml')
+			},
+
+			_SafeDump (inputData) {
+				const _require = commonjsRequire;
+
+				return _require().safeDump(inputData, {
+					lineWidth: Infinity,
+				});
+			},
+
+			OLSKInternationalWriteCompilationFile (cwd, languageID) {
+				const _require = commonjsRequire;
+
+				const data = mod._SafeDump(this._OLSKInternationalCompilationObject(cwd, languageID));
+
+				const outputDirectory = _require().dirname(mod._OLSKInternationalCompilationFilePath(cwd));
+
+				if (!_require().existsSync(outputDirectory)){
+					_require().mkdirSync(outputDirectory);
+				}
+
+				_require().writeFileSync(mod._OLSKInternationalCompilationFilePath(cwd), data);
+			},
+
+			OLSKInternationalSpreadCompilationFile (cwd, languageID) {
+				if (typeof cwd !== 'string' || !cwd.trim()) {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+
+				const _require = commonjsRequire;
+
+				const compilation = _require().safeLoad(_require().readFileSync(mod._OLSKInternationalCompilationFilePath(cwd), 'utf8'));
+
+				Object.keys(compilation).map(function (e) {
+					return _require().writeFileSync(e, mod._SafeDump(compilation[e]));
+				});
+			},
+
+			OLSKInternationalAddControllerLanguageCode (cwd, languageID) {
+				if (typeof cwd !== 'string' || !cwd.trim()) {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+
+				if (typeof languageID !== 'string' || !languageID.trim()) {
+					throw new Error('OLSKErrorInputNotValid');
+				}
+
+				const _require = commonjsRequire;
+
+				_require().sync('controller.js', {
+					cwd,
+					matchBase: true,
+					realpath: true,
+				}).forEach(function (file) {
+					if (file.match(/.*(\.git|DS_Store|node_modules|vendor|__\w+)\/.*/i)) {
+						return
+					}
+
+					const item = _require();
+
+					if (typeof item.OLSKControllerRoutes !== 'function') {
+						return;
+					}
+
+					if (!(function(inputData) {
+						if (Array.isArray(inputData)) {
+							return inputData;
+						}
+						return Object.entries(inputData).reduce(function (coll, item) {
+							return coll.concat(Object.assign(item[1], {
+								OLSKRouteSignature: item[0],
+							}));
+						}, []);
+					})(item.OLSKControllerRoutes()).filter(function (e) {
+						return e.OLSKRouteLanguageCodes;
+					}).filter(function (e) {
+						return !e.OLSKRouteLanguageCodes.includes(languageID);
+					}).length) {
+						return
+					}
+					const match = _require().readFileSync(file, 'utf8').match(/OLSKRouteLanguageCodes: \[.*\]/g);
+
+					if (!match) {
+						throw new Error(`invalid OLSKRouteLanguageCodes syntax in ${ e }`);
+					}
+
+					match.map(function (e) {
+						const match = e.match(/\[.*\]/);
+						return _require().writeFileSync(file, _require().readFileSync(file, 'utf8').replace(/OLSKRouteLanguageCodes: \[.*\]/, `OLSKRouteLanguageCodes: ['${JSON.parse(match[0].replace(/\'/g, '"')).concat(languageID).join('\', \'')}']`));
+					});
+				});
+
+				if (process.argv[2].endsWith('olsk-i18n-add')) {
+					process.exit();
+				}
+			},
+
 		};
 		
 		Object.assign(exports, mod);
@@ -129,167 +294,146 @@ var LCHVitrineBehaviour = (function () {
 		});
 
 	})));
+
+	{
+		exports.OLSKLocalized = function (inputData) {
+			return exports.OLSKInternationalLocalizedString(inputData, JSON.parse(`{"en":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Randomize page colours","LCHVitrinePageColoursRestore":"Restore page colours","LCHVitrineCopyPageInfo":"Copy page info","LCHVitrineSendEmail":"Send email","LCHVitrinePageLinksHighlightAdd":"Highlight page links","LCHVitrinePageLinksHighlightRemove":"Remove page links highlight","LCHVitrineMinimalistDateString":"Minimalist Date String"},"LCHVitrineCopyPageInfoAlertText":"Copied to clipboard","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Customize the web with JavaScript and CSS","LCHVitrineContentAppButtonText":"Open app","LCHVitrineDemoButtonCommitText":"Demo Commit mode","LCHVitrineDemoButtonPreviewText":"Demo Preview mode","LCHVitrineDemoButtonPipeText":"Demo Pipe mode","LCHVitrineBrueghelText":"A photo of a postcard containing Pieter Bruegel's painting: The Fall of the Rebel Angels"},"es":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Aleatorizar los colores de la página","LCHVitrinePageColoursRestore":"Restablecer los colores de la página","LCHVitrineCopyPageInfo":"Copiar información de la página","LCHVitrineSendEmail":"Enviar correo","LCHVitrinePageLinksHighlightAdd":"Marcar los enlaces de la página","LCHVitrinePageLinksHighlightRemove":"Quitar las marcas enlace de la página","LCHVitrineMinimalistDateString":"Frase del dato minimalista"},"LCHVitrineCopyPageInfoAlertText":"Copiado al portapapeles","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Personalizar la web con JavaScript y CSS","LCHVitrineContentAppButtonText":"Abrir app","LCHVitrineDemoButtonCommitText":"Demo modo de Commit","LCHVitrineDemoButtonPreviewText":"Demo modo de Preview","LCHVitrineDemoButtonPipeText":"Demo modo de Pipe","LCHVitrineBrueghelText":"Una foto de una tarjeta postal que contiene una pintura de Pieter Bruegel : La caída de los ángeles rebeldes"},"fr":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Randomiser les couleurs de la page","LCHVitrinePageColoursRestore":"Rétablir les couleurs de la page","LCHVitrineCopyPageInfo":"Copier les informations de la page","LCHVitrineSendEmail":"Envoyer email","LCHVitrinePageLinksHighlightAdd":"Surligner des liens de la page","LCHVitrinePageLinksHighlightRemove":"Enlever le surlignage des liens de la page","LCHVitrineMinimalistDateString":"Chaîne de date minimaliste"},"LCHVitrineCopyPageInfoAlertText":"Copié dans le presse-papier","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Personnaliser le web avec JavaScript et CSS","LCHVitrineContentAppButtonText":"Ouvrir l'app","LCHVitrineDemoButtonCommitText":"Démo mode Commit","LCHVitrineDemoButtonPreviewText":"Démo mode Preview","LCHVitrineDemoButtonPipeText":"Démo mode Pipe","LCHVitrineBrueghelText":"Une photo d'une carte postale qui contient une peinture de Pieter Bruegel : La Chute des anges rebelles"},"pt":{}}`)[window.OLSKPublicConstants('OLSKSharedPageCurrentLanguage')]);
+		};
+	}
 	});
 
-	var OLSKInternational = unwrapExports(main);
+	unwrapExports(main);
+	var main_1 = main.OLSKLocalized;
 
 	var main$1 = createCommonjsModule(function (module, exports) {
+	const _require = commonjsRequire;
 
-	//_ OLSKTestingFakeRequest
+	const mod = {
 
-	exports.OLSKTestingFakeRequest = function(inputData = {}) {
-		console.warn('OLSKTestingFakeRequest DEPRECATED');
-		return Object.assign({}, inputData);
-	};
+		OLSKSpecUIArguments (inputData) {
+			if (!Array.isArray(inputData)) {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	//_ OLSKTestingFakeRequestForSession
+			return inputData.map(function (e) {
+				if (e.match(/^match=/)) {
+					return e.replace(/^match=/, '-os-match=');
+				}
 
-	exports.OLSKTestingFakeRequestForSession = function(inputData = {}) {
-		console.warn('OLSKTestingFakeRequestForSession DEPRECATED');
-		return exports.OLSKTestingFakeRequest({
-			session: inputData,
-		});
-	};
+				if (e.match(/^skip=/)) {
+					return e.replace(/^skip=/, '-os-skip=');
+				}
 
-	//_ OLSKTestingFakeRequestForHeaders
+				return e;
+			});
+		},
 
-	exports.OLSKTestingFakeRequestForHeaders = function(inputData = {}) {
-		console.warn('OLSKTestingFakeRequestForHeaders DEPRECATED');
-		return exports.OLSKTestingFakeRequest({
-			headers: inputData,
-		});
-	};
+		OLSKSpecUITestPaths (inputData) {
+			if (typeof inputData !== 'string') {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	//_ OLSKTestingFakeResponse
+			if (!_require().OLSKDiskIsRealFolderPath(inputData)) {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	exports.OLSKTestingFakeResponse = function(inputData = {}) {
-		console.warn('OLSKTestingFakeResponse DEPRECATED');
-		return Object.assign({}, inputData);
-	};
+			return _require().sync('**/ui-test-*.js', {
+				cwd: inputData,
+				realpath: true,
+			}).filter(function (e) {
+				return !e.match(_require().OLSKDiskStandardIgnorePattern());
+			});
+		},
 
-	//_ OLSKTestingFakeResponseForLocals
+		OLSKSpecUISourcePaths (inputData) {
+			if (typeof inputData !== 'string') {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	exports.OLSKTestingFakeResponseForLocals = function(inputData = {}) {
-		console.warn('OLSKTestingFakeResponseForLocals DEPRECATED');
-		return exports.OLSKTestingFakeResponse({
-			locals: inputData,
-		});
-	};
+			if (!_require().OLSKDiskIsRealFolderPath(inputData)) {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	//_ OLSKTestingFakeResponseForJSON
+			return _require().sync('**/+(ui-behaviour.js|*.ejs|*.md)', {
+				cwd: inputData,
+				realpath: true,
+			}).filter(function (e) {
+				if (e.match('__compiled')) {
+					return true;
+				}
+				
+				return !e.match(_require().OLSKDiskStandardIgnorePattern());
+			});
+		},
 
-	exports.OLSKTestingFakeResponseForJSON = function() {
-		console.warn('OLSKTestingFakeResponseForJSON DEPRECATED');
-		return exports.OLSKTestingFakeResponse({
-			json: function(inputData) {
-				return inputData;
-			},
-		});
-	};
+		OLSKSpecMochaPaths (inputData) {
+			if (typeof inputData !== 'object' || inputData === null) {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	//_ OLSKTestingFakeResponseForRender
+			if (typeof inputData.ParamPackageDirectory !== 'string') {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-	exports.OLSKTestingFakeResponseForRender = function(callback) {
-		console.warn('OLSKTestingFakeResponseForRender DEPRECATED');
-		if (typeof callback !== 'function') {
-			throw new Error('OLSKErrorInputNotValid');
-		}
+			if (typeof inputData.ParamWorkingDirectory !== 'string') {
+				throw new Error('OLSKErrorInputNotValid');
+			}
 
-		return exports.OLSKTestingFakeResponse({
-			render: callback,
-		});
-	};
+			return [
+				_require().join(inputData.ParamPackageDirectory, './node_modules/.bin/mocha'),
+				_require().join(inputData.ParamPackageDirectory, '../.bin/mocha'),
+				_require().join(inputData.ParamWorkingDirectory, './node_modules/.bin/mocha'),
+				];
+		},
 
-	//_ OLSKTestingFakeResponseForRedirect
-
-	exports.OLSKTestingFakeResponseForRedirect = function() {
-		console.warn('OLSKTestingFakeResponseForRedirect DEPRECATED');
-		return exports.OLSKTestingFakeResponse({
-			redirect: function(inputData) {
-				return inputData;
-			},
-		});
-	};
-
-	//_ OLSKTestingFakeResponseForStatus
-
-	exports.OLSKTestingFakeResponseForStatus = function() {
-		console.warn('OLSKTestingFakeResponseForStatus DEPRECATED');
-		var res = Object.assign(exports.OLSKTestingFakeResponseForJSON(), {
-			status: function(inputData) {
-				res.statusCode = inputData;
-
-				return;
-			},
-		});
-
-		return res;
-	};
-
-	//_ OLSKTestingFakeNext
-
-	exports.OLSKTestingFakeNext = function() {
-		console.warn('OLSKTestingFakeNext DEPRECATED');
-		return function(inputData) {
-			return typeof inputData === 'undefined' ? 'RETURNED_UNDEFINED' : inputData;
-		};
-	};
-
-	//_ _OLSKTestingMochaReplaceES6Import
-
-	exports._OLSKTestingMochaReplaceES6Import = function(inputData) {
-		const exportable = [];
-		
-		inputData = inputData
-			.replace(/^import \* as (\w+) from ['"]([^'"]+)['"];?/gm, 'var $1 = require("$2");')
-			// .replace(/^import (\w+) from ['"]([^'"]+)['"];?/gm, 'var {default: $1} = require("$2");')
-			.replace(/^import (\w+) from ['"]([^'"]+)['"];?/gm, 'var _$1 = require("$2"); const $1 = _$1.default || _$1')
-			.replace(/^import {([^}]+)} from ['"](.+)['"];?/gm, 'var {$1} = require("$2");')
-			.replace(/^export default /gm, 'exports.default = ')
-			.replace(/^export (const|let|var|class|function) (\w+)/gm, (match, type, name) => {
-				exportable.push(name);
-				return `${type} ${name}`;
-			})
-			.replace(/^export \{([^}]+)\}(?: from ['"]([^'"]+)['"];?)?/gm, (match, names, source) => {
-				names.split(',').filter(Boolean).forEach(name => {
+		_OLSKSpecMochaReplaceES6Import (inputData) {
+			const exportable = [];
+			
+			inputData = inputData
+				.replace(/^import \* as (\w+) from ['"]([^'"]+)['"];?/gm, 'var $1 = require("$2");')
+				// .replace(/^import (\w+) from ['"]([^'"]+)['"];?/gm, 'var {default: $1} = require("$2");')
+				.replace(/^import (\w+) from ['"]([^'"]+)['"];?/gm, 'var _$1 = require("$2"); const $1 = _$1.default || _$1')
+				.replace(/^import {([^}]+)} from ['"](.+)['"];?/gm, 'var {$1} = require("$2");')
+				.replace(/^export default /gm, 'exports.default = ')
+				.replace(/^export (const|let|var|class|function) (\w+)/gm, (match, type, name) => {
 					exportable.push(name);
-				});
+					return `${type} ${name}`;
+				})
+				.replace(/^export \{([^}]+)\}(?: from ['"]([^'"]+)['"];?)?/gm, (match, names, source) => {
+					names.split(',').filter(Boolean).forEach(name => {
+						exportable.push(name);
+					});
 
-				return source ? `const { ${names} } = require("${source}");` : '';
-			})
-			.replace(/^export function (\w+)/gm, 'exports.$1 = function $1');
+					return source ? `const { ${names} } = require("${source}");` : '';
+				})
+				.replace(/^export function (\w+)/gm, 'exports.$1 = function $1');
 
-		exportable.forEach(name => {
-			inputData += `\nexports.${name} = ${name};`;
-		});
+			exportable.forEach(name => {
+				inputData += `\nexports.${name} = ${name};`;
+			});
 
-		return inputData;
+			return inputData;
+		},
+		
 	};
 
-	exports.OLSK_TESTING_BEHAVIOUR = function () {
-		if (typeof navigator === 'undefined') {
-			return false;
-		}
+	Object.assign(exports, mod);
 
-		return navigator.appName === 'Zombie';
-	};
+	{
+		exports.OLSK_SPEC_UI = function () {
+			if (typeof navigator === 'undefined') {
+				return false;
+			}
+
+			if (typeof window !== 'undefined' && window.location.hostname === 'loc.tests') {
+				return true;
+			}
+
+			return navigator.appName === 'Zombie';
+		};
+	}
 	});
-	var main_1 = main$1.OLSKTestingFakeRequest;
-	var main_2 = main$1.OLSKTestingFakeRequestForSession;
-	var main_3 = main$1.OLSKTestingFakeRequestForHeaders;
-	var main_4 = main$1.OLSKTestingFakeResponse;
-	var main_5 = main$1.OLSKTestingFakeResponseForLocals;
-	var main_6 = main$1.OLSKTestingFakeResponseForJSON;
-	var main_7 = main$1.OLSKTestingFakeResponseForRender;
-	var main_8 = main$1.OLSKTestingFakeResponseForRedirect;
-	var main_9 = main$1.OLSKTestingFakeResponseForStatus;
-	var main_10 = main$1.OLSKTestingFakeNext;
-	var main_11 = main$1._OLSKTestingMochaReplaceES6Import;
-	var main_12 = main$1.OLSK_TESTING_BEHAVIOUR;
-
-	const OLSKLocalized = function(translationConstant) {
-		return OLSKInternational.OLSKInternationalLocalizedString(translationConstant, JSON.parse(`{"en":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Randomize page colours","LCHVitrinePageColoursRestore":"Restore page colours","LCHVitrineCopyPageInfo":"Copy page info","LCHVitrineSendEmail":"Send email","LCHVitrinePageLinksHighlightAdd":"Highlight page links","LCHVitrinePageLinksHighlightRemove":"Remove page links highlight","LCHVitrineMinimalistDateString":"Minimalist Date String"},"LCHVitrineCopyPageInfoAlertText":"Copied to clipboard","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Generalized interface for keyboard-based interaction","LCHVitrineContentAppButtonText":"Go to app","LCHVitrineDemoButtonCommitText":"Demo Commit mode","LCHVitrineDemoButtonPreviewText":"Demo Preview mode","LCHVitrineDemoButtonPipeText":"Demo Pipe mode","LCHVitrineBrueghelText":"A photo of a postcard containing Pieter Bruegel's painting: The Fall of the Rebel Angels"},"es":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Aleatorizar los colores de la página","LCHVitrinePageColoursRestore":"Restablecer los colores de la página","LCHVitrineCopyPageInfo":"Copiar información de la página","LCHVitrineSendEmail":"Enviar correo","LCHVitrinePageLinksHighlightAdd":"Marcar los enlaces de la página","LCHVitrinePageLinksHighlightRemove":"Quitar las marcas enlace de la página","LCHVitrineMinimalistDateString":"Frase del dato minimalista"},"LCHVitrineCopyPageInfoAlertText":"Copiado al portapapeles","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Interfaz generalizada para la interacción con el teclado","LCHVitrineContentAppButtonText":"Ir al app","LCHVitrineDemoButtonCommitText":"Demo modo de Commit","LCHVitrineDemoButtonPreviewText":"Demo modo de Preview","LCHVitrineDemoButtonPipeText":"Demo modo de Pipe","LCHVitrineBrueghelText":"Una foto de una tarjeta postal que contiene una pintura de Pieter Bruegel : La caída de los ángeles rebeldes"},"fr":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Randomiser les couleurs de la page","LCHVitrinePageColoursRestore":"Rétablir les couleurs de la page","LCHVitrineCopyPageInfo":"Copier les informations de la page","LCHVitrineSendEmail":"Envoyer email","LCHVitrinePageLinksHighlightAdd":"Surligner des liens de la page","LCHVitrinePageLinksHighlightRemove":"Enlever le surlignage des liens de la page","LCHVitrineMinimalistDateString":"Chaîne de date minimaliste"},"LCHVitrineCopyPageInfoAlertText":"Copié dans le presse-papier","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Interface généralisée pour les interactions clavier","LCHVitrineContentAppButtonText":"Aller à l'appli","LCHVitrineDemoButtonCommitText":"Démo mode Commit","LCHVitrineDemoButtonPreviewText":"Démo mode Preview","LCHVitrineDemoButtonPipeText":"Démo mode Pipe","LCHVitrineBrueghelText":"Une photo d'une carte postale qui contient une peinture de Pieter Bruegel : La Chute des anges rebelles"}}`)[window.OLSKPublicConstants('OLSKSharedPageCurrentLanguage')]);
-	};
+	var main_1$1 = main$1.OLSK_SPEC_UI;
 
 	const mod = {
 
@@ -341,7 +485,7 @@ var LCHVitrineBehaviour = (function () {
 		},
 
 		LCHVitrineCopyPageInfoCallback () {
-			window.alert(OLSKLocalized('LCHVitrineCopyPageInfoAlertText'));
+			window.alert(main_1('LCHVitrineCopyPageInfoAlertText'));
 
 			return this.api.LCHCopyToClipboard(`${document.title} ${location.href}`);
 		},
@@ -356,7 +500,7 @@ var LCHVitrineBehaviour = (function () {
 		LCHVitrineSendEmailCallback () {
 			const url = 'mailto:';
 
-			if (main_12()) {
+			if (main_1$1()) {
 				return window.alert(url)
 			}
 			window.location.href = url;
@@ -418,16 +562,12 @@ var LCHVitrineBehaviour = (function () {
 
 	};
 
-	const OLSKLocalized$1 = function(translationConstant) {
-		return OLSKInternational.OLSKInternationalLocalizedString(translationConstant, JSON.parse(`{"en":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Randomize page colours","LCHVitrinePageColoursRestore":"Restore page colours","LCHVitrineCopyPageInfo":"Copy page info","LCHVitrineSendEmail":"Send email","LCHVitrinePageLinksHighlightAdd":"Highlight page links","LCHVitrinePageLinksHighlightRemove":"Remove page links highlight","LCHVitrineMinimalistDateString":"Minimalist Date String"},"LCHVitrineCopyPageInfoAlertText":"Copied to clipboard","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Generalized interface for keyboard-based interaction","LCHVitrineContentAppButtonText":"Go to app","LCHVitrineDemoButtonCommitText":"Demo Commit mode","LCHVitrineDemoButtonPreviewText":"Demo Preview mode","LCHVitrineDemoButtonPipeText":"Demo Pipe mode","LCHVitrineBrueghelText":"A photo of a postcard containing Pieter Bruegel's painting: The Fall of the Rebel Angels"},"es":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Aleatorizar los colores de la página","LCHVitrinePageColoursRestore":"Restablecer los colores de la página","LCHVitrineCopyPageInfo":"Copiar información de la página","LCHVitrineSendEmail":"Enviar correo","LCHVitrinePageLinksHighlightAdd":"Marcar los enlaces de la página","LCHVitrinePageLinksHighlightRemove":"Quitar las marcas enlace de la página","LCHVitrineMinimalistDateString":"Frase del dato minimalista"},"LCHVitrineCopyPageInfoAlertText":"Copiado al portapapeles","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Interfaz generalizada para la interacción con el teclado","LCHVitrineContentAppButtonText":"Ir al app","LCHVitrineDemoButtonCommitText":"Demo modo de Commit","LCHVitrineDemoButtonPreviewText":"Demo modo de Preview","LCHVitrineDemoButtonPipeText":"Demo modo de Pipe","LCHVitrineBrueghelText":"Una foto de una tarjeta postal que contiene una pintura de Pieter Bruegel : La caída de los ángeles rebeldes"},"fr":{"LCHVitrineDemoRecipeNames":{"LCHVitrinePageColoursRandomize":"Randomiser les couleurs de la page","LCHVitrinePageColoursRestore":"Rétablir les couleurs de la page","LCHVitrineCopyPageInfo":"Copier les informations de la page","LCHVitrineSendEmail":"Envoyer email","LCHVitrinePageLinksHighlightAdd":"Surligner des liens de la page","LCHVitrinePageLinksHighlightRemove":"Enlever le surlignage des liens de la page","LCHVitrineMinimalistDateString":"Chaîne de date minimaliste"},"LCHVitrineCopyPageInfoAlertText":"Copié dans le presse-papier","LCHVitrineTitle":"Launchlet","LCHVitrineDescription":"Interface généralisée pour les interactions clavier","LCHVitrineContentAppButtonText":"Aller à l'appli","LCHVitrineDemoButtonCommitText":"Démo mode Commit","LCHVitrineDemoButtonPreviewText":"Démo mode Preview","LCHVitrineDemoButtonPipeText":"Démo mode Pipe","LCHVitrineBrueghelText":"Une photo d'une carte postale qui contient une peinture de Pieter Bruegel : La Chute des anges rebelles"}}`)[window.OLSKPublicConstants('OLSKSharedPageCurrentLanguage')]);
-	};
-
 	const _LCHVitrineRecipes = Object.entries(mod).filter(function (e) {
 		return e.shift().includes('Recipe');
 	}).map(function (e) {
 		const item = e.pop()();
 		return Object.assign(item, {
-			LCHRecipeName: OLSKLocalized$1('LCHVitrineDemoRecipeNames')[item.LCHRecipeSignature],
+			LCHRecipeName: main_1('LCHVitrineDemoRecipeNames')[item.LCHRecipeSignature],
 		});
 	});
 

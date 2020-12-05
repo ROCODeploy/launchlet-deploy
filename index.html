@@ -1,13 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<title>Launchlet</title>
-	<meta name="description" content="Generalized interface for keyboard-based interaction" />
+	<meta name="description" content="Customize the web with JavaScript and CSS" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta name="viewport" content="width=device-width">
 	<link rel="canonical" href="/" />
 	<link rel="alternate" hreflang="en" href="/en/" />
@@ -18,7 +14,7 @@
 			return {"OLSKSharedPageCurrentLanguage":"en"}[inputData];
 		};
 	</script>
-	<link rel="apple-touch-icon" href="https://launchlet.s3.amazonaws.com/public/identity.jpg">
+	<link rel="apple-touch-icon" href="https://rosano.s3.amazonaws.com/public/launchlet/identity.jpg">
 	<link rel="stylesheet" type="text/css" href="/_shared/__external/normalize.css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="/_shared/__external/OLSKLayout/ui-style.css">
 	<link rel="stylesheet" type="text/css" href="/_shared/common/ui-style.css">
@@ -29,6 +25,7 @@
 </head>
 
 <body>
+
 
 
 <div class="LCHVitrine OLSKCommon">
@@ -60,29 +57,30 @@
 </div>
 
 
-<hr>
+<hr role="presentation" />
 
-<div class="LCHVitrineIdentity">
+<div class="LCHVitrineIdentity OLSKCommonCard OLSKCommonIdentityCard">
 	<img class="LCHVitrineIdentityLogo" src="/_shared/LCHRootLink/ui-assets/identity.svg" role="presentation" />
-	<h1 class="LCHVitrineIdentityName">Launchlet</h1>
+	<section>
+		<span class="LCHVitrineIdentityName">Launchlet</span>
+		<span class="LCHVitrineIdentityBlurb">Customize the web with JavaScript and CSS</span>
+	</section>
 </div>
 
 <article class="LCHVitrineContent">
 
-<p><em>Generalized interface for keyboard-based interaction</em></p>
-<p>Launchlet is a simple way to add a name to snippets of code and then run it. Inspired by <a href="https://qsapp.com">Quicksilver</a>, it functions primarily via mouseless interaction and lets you access your <a href="/guide">Recipes</a> with a few keyboard strokes. You can also use it to personalize websites with custom CSS or JavaScript. Optimized to be fast so that you can &#39;think then do&#39;.</p>
-<p>You can run Launchlet as a bookmarklet, <a href="https://github.com/launchlet/launchlet-extension">browser extension</a>, or as a <a href="https://github.com/launchlet/launchlet/blob/master/os-app/dev-package/README.md">module</a> in your own project to add a &#39;jump to&#39; functionality.</p>
-<p>The code is open-source and available on <a href="https://github.com/launchlet/launchlet">GitHub</a>.</p>
-<p>The project is freely accessible but if you are in a position to give, please <a href="https://rosano.ca/donate">donate</a> to support future development.</p>
-<hr>
-<h1>App</h1>
-<p>There is also an app where you can compose a launcher personalized with your own Recipes.</p>
-<h2>Features</h2>
+<p>Launchlet is a simple way to add a name to snippets of code and then run it. Inspired by <a href="https://qsapp.com">Quicksilver</a>, it lets you accomplish more with the keyboard.</p>
+<p>You can run Launchlet as a bookmarklet, <a href="https://github.com/launchlet/launchlet-extension">browser extension</a>, or as a module in your own project to add a &#39;jump to&#39; functionality.</p>
+<p>Read the <a href="/guide">guide</a> to learn more.</p>
+<p><a class="LCHVitrineContentAppButton OLSKCommonButton OLSKCommonButtonPrimary" href="/en/compose">Open app</a></p>
+<h1 id="features">Features</h1>
 <ul>
 <li>Create Recipes with JavaScript</li>
 <li>Create Recipes with CSS</li>
 <li>Set a URL Filter on Recipes</li>
-<li>Pair securely with browser extension</li>
+<li>Pair with browser extension</li>
+<li>Sync automatically with browser extension</li>
+<li>Export bookmarklet</li>
 <li>Sync with multiple devices via remoteStorage</li>
 <li>Works offline without internet access</li>
 <li>Simple interface</li>
@@ -90,10 +88,8 @@
 <li>No ads, behavioural analytics, 3rd party trackers</li>
 <li>Works on mobile, tablet, and desktop devices</li>
 </ul>
-<p><a class="LCHVitrineContentAppButton OLSKCommonButton" href="/en/compose">Go to app</a></p>
-<hr>
-<h1>Demos</h1>
-<h2>Commit mode</h2>
+<h1 id="demos">Demos</h1>
+<h2 id="commit-mode">Commit mode</h2>
 <p>Presents a list of options and runs on <code>Enter</code>. Try any of the following options:</p>
 <ul>
 <li><code>Randomize page colours</code></li>
@@ -101,10 +97,10 @@
 <li><code>Send email</code></li>
 </ul>
 <p><button class="LCHVitrineDemoButtonCommit" onclick="LCHVitrineBehaviour.InterfaceDemoButtonCommitDidClick()">Demo Commit mode</button></p>
-<h2>Preview mode</h2>
+<h2 id="preview-mode">Preview mode</h2>
 <p>Presents a list of options and runs on select. Try jumping through the headings in this document:</p>
 <p><button class="LCHVitrineDemoButtonPreview" onclick="LCHVitrineBehaviour.InterfaceDemoButtonPreviewDidClick()">Demo Preview mode</button></p>
-<h2>Pipe mode</h2>
+<h2 id="pipe-mode">Pipe mode</h2>
 <p>Organizes items into subjects and actions. Try</p>
 <ul>
 <li><code>Highlight page links</code> and <code>Run Command</code></li>
@@ -116,15 +112,15 @@
 
 </article>
 
-<hr />
+<hr role="presentation" />
 
 <img class="LCHVitrineBrueghel" src="/brueghel.jpg" alt="A photo of a postcard containing Pieter Bruegel&#39;s painting: The Fall of the Rebel Angels"/>
 
-<hr />
+<hr role="presentation" />
 
 <div class="ROCORootLink">
 
-<a class="OLSKRootLink OLSKCommonIdentity" href="https://rosano.ca" title="Visit rosano.ca">
+<a class="OLSKRootLink OLSKCommonRootLink" href="https://rosano.ca" title="Visit rosano.ca">
 	<img class="OLSKRootLinkImage" role="presentation" src="/_shared/__external/ROCORootLink/identity.svg">
 </a>
 
@@ -134,6 +130,6 @@
 
 </div>
 
+
 </body>
 </html>
-

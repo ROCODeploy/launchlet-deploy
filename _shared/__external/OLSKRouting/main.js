@@ -6,7 +6,7 @@
 
 	const mod = {
 
-		OLSKRoutingInputDataIsRouteObject (inputData) {
+		OLSKRoutingModelIsValid (inputData) {
 			if (typeof inputData !== 'object' || inputData === null) {
 				return false;
 			}
@@ -56,12 +56,12 @@
 			return true;
 		},
 
-		OLSKRoutingCanonicalPathWithRoutePathAndOptionalParams (routePath, optionalParams = {}) {
+		OLSKRoutingCanonicalPath (routePath, optionalParams = {}) {
 			if (typeof routePath !== 'string') {
 				throw new Error('OLSKErrorInputNotValid');
 			}
 
-			var canonicalPath = exports.OLSKRoutingSubstitutionFunctionForRoutePath(routePath)(optionalParams);
+			var canonicalPath = mod.OLSKRoutingSubstitutionFunction(routePath)(optionalParams);
 
 			if (optionalParams && optionalParams.OLSKRoutingLanguage) {
 				canonicalPath = ['/', optionalParams.OLSKRoutingLanguage, canonicalPath].join('');
@@ -80,7 +80,7 @@
 			return canonicalPath + (query ? `?${ query }` : '');
 		},
 
-		OLSKRoutingSubstitutionFunctionForRoutePath (routePath) {
+		OLSKRoutingSubstitutionFunction (routePath) {
 			if (typeof routePath !== 'string') {
 				throw new Error('OLSKErrorInputNotValid');
 			}
