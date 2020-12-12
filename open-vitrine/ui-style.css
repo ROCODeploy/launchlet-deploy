@@ -1,12 +1,15 @@
 :root {
 	--OLSKCommonBackground: var(--LCHCommonBackground);
 	--OLSKCommonForeground: var(--LCHCommonForeground);
-	--OLSKCommonFontSize: 11pt;
 }
 
 body {
 	background: var(--LCHCommonBackground);
 	color: var(--LCHCommonForeground);
+}
+
+.LCHVitrineDemos {
+	display: none;
 }
 
 .LCHVitrineBrueghel {
