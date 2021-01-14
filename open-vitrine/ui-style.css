@@ -1,0 +1,23 @@
+:root {
+	--OLSKCommonBackground: var(--LCHCommonBackground);
+	--OLSKCommonForeground: var(--LCHCommonForeground);
+}
+
+body {
+	background: var(--LCHCommonBackground);
+	color: var(--LCHCommonForeground);
+}
+
+.LCHVitrineVideo2 {
+	--OLSKCommonVideoWide: 730;
+	--OLSKCommonVideoHigh: 540;
+}
+
+.LCHVitrineDemos {
+	display: none;
+}
+
+.LCHVitrineBrueghel {
+	max-width: 100%;
+	margin: 10px 0;
+}
