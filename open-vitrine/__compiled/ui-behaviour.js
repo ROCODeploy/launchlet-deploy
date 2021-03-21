@@ -354,7 +354,7 @@ var LCHVitrineBehaviour = (function () {
 				throw new Error('OLSKErrorInputNotValid');
 			}
 
-			return _require().sync('**/+(ui-behaviour.js|*.ejs|*.md)', {
+			return _require().sync('**/+(ui-behaviour.js|*.ejs|*.md|*.html)', {
 				cwd: inputData,
 				realpath: true,
 			}).filter(function (e) {

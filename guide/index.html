@@ -107,6 +107,10 @@
 }];</code></pre>
 
 <p>For example, when running Launchlet on <a href="https://rosano.ca" target="_blank">rosano.ca</a>, it is possible to choose a &#39;Send a message&#39; <em>Command</em> that originates from the page.</p>
+<h1 id="built-in-recipes">Built-in Recipes</h1>
+<h2 id="lchcopytoclipboardtext">LCHCopyToClipboard(text)</h2>
+<p>Copy input to clipboard.</p>
+<p>Returns promise.</p>
 <h1 id="shortcuts">Shortcuts</h1>
 <div class="OLSKDecorNotice">
 
@@ -177,7 +181,7 @@
 <table>
 <thead>
 <tr>
-<th align="left">Global (when storage is connected)</th>
+<th align="left">Global (when cloud is connected)</th>
 <th></th>
 </tr>
 </thead>
@@ -202,98 +206,6 @@
 <p><a href="https://remotestorage.io">remoteStorage</a> is an incredible open-source technology for synchronizing data between multiple devices and making it available offline.</p>
 <p>It allows the same data to be used in different ways by multiple apps. You could think of it as a USB key for your documents that you can plug into websites to work on your stuff.</p>
 <p>You can get one for free from <a href="https://5apps.com/storage/">5apps</a>.</p>
-
-<h1 id="launchlet-package">Launchlet package</h1>
-<p>The Launchlet package can be added to your own project as a module to quickly present a &#39;Jump to&#39; functionality.</p>
-<h2 id="setup">Setup</h2>
-<p><a href="https://unpkg.com/launchlet/__compiled/launchlet.js">https://unpkg.com/launchlet/__compiled/launchlet.js</a>
-<a href="https://unpkg.com/launchlet/__compiled/launchlet.css">https://unpkg.com/launchlet/__compiled/launchlet.css</a></p>
-<pre><code>npm install launchlet</code></pre>
-<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://launchlet.dev/launchlet.css&quot; /&gt;
-&lt;script src=&quot;https://launchlet.dev/launchlet.js&quot;&gt;&lt;/script&gt;
-</code></pre>
-<h2 id="usage">Usage</h2>
-<h3 id="commit-mode">Commit Mode</h3>
-<pre><code class="language-javascript">Launchlet.LCHSingletonCreate({
-  LCHOptionRecipes: [{
-    LCHRecipeName: &#39;Alfa&#39;,
-    LCHRecipeCallback () {
-      alert(&#39;Alfa&#39;);
-    },
-  }],
-  LCHOptionMode: Launchlet.LCHModeCommit,
-});</code></pre>
-<h3 id="preview-mode">Preview Mode</h3>
-<pre><code class="language-javascript">Launchlet.LCHSingletonCreate({
-  LCHOptionRecipes: [{
-    LCHRecipeName: &#39;Bravo&#39;,
-    LCHRecipeCallback () {
-      console.log(&#39;Bravo&#39;);
-    },
-  }, {
-    LCHRecipeName: &#39;Charlie&#39;,
-    LCHRecipeCallback () {
-      console.log(&#39;Charlie&#39;);
-    },
-  }],
-  LCHOptionMode: Launchlet.LCHModePreview,
-});</code></pre>
-<h3 id="pipe-mode">Pipe Mode</h3>
-<pre><code class="language-javascript">Launchlet.LCHSingletonCreate({
-  LCHOptionRecipes: [{
-    LCHRecipeName: &#39;Delta&#39;,
-    LCHRecipeCallback () {
-      alert(&#39;Delta&#39;);
-    },
-  }],
-  LCHOptionMode: Launchlet.LCHModePipe,
-});</code></pre>
-<h3 id="if-you-have-keyboard-shortcuts-on-the-page">If you have keyboard shortcuts on the page</h3>
-<p>Ignore <code>keydown</code> events if Launchlet is active:</p>
-<pre><code class="language-javascript">window.addEventListener(&#39;keydown&#39;, function (event) {
-  if (Launchlet.LCHSingletonExists()) {
-    return;
-  }
-
-  // ...
-});</code></pre>
-<h2 id="api">API</h2>
-<h3 id="launchletlchsingletoncreate">Launchlet.LCHSingletonCreate</h3>
-<p>Creates a singleton instance of the launcher. Destroys existing instance if there is one. Takes an optional configuration object.</p>
-<h4 id="options">Options</h4>
-<ul>
-<li><p>LCHOptionRecipes (array) – <code>[]</code></p>
-<ul>
-<li><em>Recipe</em> objects</li>
-</ul>
-</li>
-<li><p>LCHOptionMode (identifier) – <code>Launchlet.LCHModeCommit</code></p>
-<ul>
-<li><code>Launchlet.LCHModeCommit</code></li>
-<li><code>Launchlet.LCHModePreview</code></li>
-<li><code>Launchlet.LCHModePipe</code></li>
-</ul>
-</li>
-<li><p>LCHOptionIncludePageRecipes (boolean) – <code>false</code></p>
-</li>
-<li><p>LCHOptionRunAutomaticRecipes (boolean) – <code>false</code></p>
-</li>
-<li><p>LCHOptionCompletionHandler (function) – <code>undefined</code></p>
-</li>
-<li><p>LCHOptionLanguage (string) – <code>&#39;en&#39;</code></p>
-<ul>
-<li><code>&#39;en&#39;</code></li>
-<li><code>&#39;fr&#39;</code></li>
-<li><code>&#39;es&#39;</code></li>
-</ul>
-</li>
-</ul>
-<h3 id="launchletlchsingletonexists">Launchlet.LCHSingletonExists</h3>
-<p>Returns true if there is a singleton instance of the launcher.</p>
-<h3 id="launchletlchsingletondestroy">Launchlet.LCHSingletonDestroy</h3>
-<p>Destroys a singleton instance of the launcher.</p>
-<h3 id="launchletlchtasksrun">Launchlet.LCHTasksRun</h3>
-<p>Runs each <code>Task</code> that matches the current URL unless <code>LCHRecipeIsExcluded</code> returns true.</p>
 
 
 <hr role="presentation" />
