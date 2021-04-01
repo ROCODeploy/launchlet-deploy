@@ -1,12 +1,5 @@
 :root {
-	--OLSKCommonBackground: var(--LCHCommonBackground);
-	--OLSKCommonForeground: var(--LCHCommonForeground);
 	--OLSKCommonFontSize: 11pt;
-}
-
-body {
-	background: var(--LCHCommonBackground);
-	color: var(--LCHCommonForeground);
 }
 
 .LCHGuide {
@@ -29,8 +22,11 @@ body {
 	margin: 10px 20px;
 }
 
-.LCHGuideExample code {
-	padding: 0;
+.LCHGuideExample dd code {
+  padding: 10px;
+  background: #ddd;
+  color: #333;
+  word-wrap: break-word;
 }
 
 .OLSKRootLink {

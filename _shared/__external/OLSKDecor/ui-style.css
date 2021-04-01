@@ -48,9 +48,41 @@
 	border-bottom: var(--OLSKCommonEdgeBorder) !important;
 }
 
+/* OLSKDecorFixed */
+
+.OLSKDecorFixed {
+	--OLSKDecorFixedSecondaryHeight: 53px;
+}
+
+@media screen and (min-width: 760px) {
+
+.OLSKDecorFixed {
+	--OLSKDecorFixedSecondaryHeight: 41px;
+}
+
+}
+
+.OLSKDecorFixedHeader {
+	position: fixed;
+	top: 0;
+	display: block;
+	width: 100%;
+	z-index: 2;
+}
+
+.OLSKDecorFixedSecondary {
+	margin-top: var(--OLSKDecorFixedSecondaryHeight);
+}
+
+.OLSKDecorFixedSecondary .OLSKStickyHeader {
+	top: var(--OLSKDecorFixedSecondaryHeight);
+	z-index: 1;
+}
+
 /* OLSKStickyHeader */
 
 .OLSKStickyHeader {
+	position: -webkit-sticky;
 	position: sticky;
 	top: 0;
 }
@@ -98,6 +130,7 @@
 }
 
 .OLSKMobileViewHeader {
+	position: -webkit-sticky;
 	position: sticky;
 	top: 0;
 }
@@ -265,12 +298,6 @@
 	-webkit-overflow-scrolling: touch;
 }
 
-.OLSKMobileSafariRemoveDefaultInputStyle {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-}
-
 /* OLSKMasterList */
 
 .OLSKIsLoading .OLSKMasterListBody {
@@ -306,18 +333,6 @@
 	color: var(--OLSKMasterListItemSelectedColorActiveInverse);
 }
 
-}
-
-/* OLSKStorageToolbar */
-
-.OLSKStorageToolbar .OLSKToolbarElementGroup:last-of-type {
-	margin: unset !important;
-}
-
-@media (max-width: 450px) {
-	.OLSKStorageToolbar .OLSKToolbarElementGroup:last-of-type {
-		flex-grow: 1;
-	}
 }
 
 /* OLSKDecor */
@@ -401,11 +416,27 @@
 	border-top: var(--OLSKCommonEdgeBorder);
 }
 
-.OLSKDecor input, .OLSKDecor button, .OLSKDecorPress, .OLSKDecor input[type="submit"], .OLSKDecor textarea {	
+.OLSKDecor input, .OLSKDecor button, .OLSKDecorPress, .OLSKDecor input[type="submit"], .OLSKDecor textarea, .OLSKDecorInput {	
 	display: inline-block;
 	padding: var(--OLSKCommonInputPadding);
 	border: var(--OLSKCommonBorder);
 	border-radius: var(--OLSKBorderRadius);
+}
+
+.OLSKDecor input[type="text"], .OLSKDecor textarea, .OLSKDecorInput {	
+	background: var(--OLSKCommonBackground) !important;
+	border-color: var(--OLSKCommonBorderColor) !important;
+
+	/* OLSKMobileSafariRemoveDefaultInputStyle */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+.OLSKDecor input, .OLSKDecor textarea {	
+	border: var(--OLSKCommonEdgeBorder);
+
+	color: var(--OLSKCommonForeground);
 }
 
 .OLSKDecor button, .OLSKDecorPress, .OLSKDecor input[type="submit"] {
@@ -620,7 +651,6 @@ a.OLSKDecorPress {
 .OLSKDecorBigForm input[type=text], .OLSKDecorBigForm textarea {
 	width: 90%;
 	padding: calc(var(--OLSKSharedPadding) * 2);
-	border: var(--OLSKCommonEdgeBorder);
 }
 
 /*.OLSKCommonForm input[type=text] {
@@ -669,4 +699,14 @@ a.OLSKDecorPress {
 .OLSKDecorX img {
     border: 5px var(--OLSKCommonInteractiveFill) solid;
     border-radius: var(--OLSKBorderRadius);
+}
+
+/* OLSKDecorSilentLink */
+
+.OLSKDecorSilentLink:after {
+ content: unset !important;
+}
+
+.OLSKDecorSilentLink img {
+ border: none !important;
 }
