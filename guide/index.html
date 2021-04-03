@@ -36,7 +36,7 @@
 <p>A <em>Recipe</em> is a format for expressing how functions will run in Launchlet.</p>
 <h2 id="command">Command</h2>
 <p>A <em>Command</em> is the simplest kind of <em>Recipe</em>. It has a <code>Name</code> and <code>Callback</code>:</p>
-<p><dl class="LCHGuideExample">
+<p><dl class="OLSKDecorGlossary">
 
 <dt>Name</dt><dd>Say Hello</dd>
 
@@ -46,7 +46,7 @@
 <p>This can be run by Launchlet directly as it has no input.</p>
 <h2 id="procedure">Procedure</h2>
 <p>A <em>Procedure</em> has a <code>Signature</code> and <code>Callback</code>, and optionally <code>Arguments</code>:</p>
-<p><dl class="LCHGuideExample">
+<p><dl class="OLSKDecorGlossary">
 
 <dt>Signature</dt><dd>Greet</dd>
 
@@ -56,7 +56,7 @@
 
 </dl></p>
 <p>This can be called from any other <em>Recipe</em> using the API <code>this.api[&#39;Greet&#39;]</code> or <code>this.api.Greet</code>. In this way, the previous example could be changed to:</p>
-<p><dl class="LCHGuideExample">
+<p><dl class="OLSKDecorGlossary">
 
 <dt>Name</dt><dd>Say Hello</dd>
 
@@ -65,7 +65,7 @@
 </dl></p>
 <h2 id="pipe-mode-subject">Pipe mode: Subject</h2>
 <p>A <em>Subject</em> has a <code>Name</code>, <code>Output Type</code> and <code>Callback</code>:</p>
-<p><dl class="LCHGuideExample">
+<p><dl class="OLSKDecorGlossary">
 
 <dt>Name</dt><dd>Salutation</dd>
 
@@ -77,7 +77,7 @@
 <p>In Pipe mode, this can be used as input for any <em>Action</em> that takes a <code>String</code>.</p>
 <h2 id="pipe-mode-action">Pipe mode: Action</h2>
 <p>An <em>Action</em> has a <code>Name</code>, <code>Input Types</code> and <code>Callback</code>:</p>
-<p><dl class="LCHGuideExample">
+<p><dl class="OLSKDecorGlossary">
 
 <dt>Name</dt><dd>Shout</dd>
 
@@ -99,7 +99,7 @@
 <p>It is best to run code that is concise and easy to read.</p>
 <h1 id="recipes-from-the-current-page">Recipes from the current page</h1>
 <p>Optionally, Launchlet can include Recipes from any page that sets <code>LCHPageRecipes</code> on the <code>window</code> object to an <code>Array</code>. This allows pages to expose their functionality in a way that is accessible to 3rd parties:</p>
-<pre class="LCHGuideExample"><code>window.LCHPageRecipes = [{
+<pre class="OLSKDecorGlossary"><code>window.LCHPageRecipes = [{
  LCHRecipeName: "Say Hello",
  LCHRecipeCallback: function () {
   alert('Hello');
@@ -213,7 +213,7 @@
 <div class="LCHRootLink">
 
 <a class="OLSKRootLink OLSKCommonRootLink" href="/en/" title="Return to the homepage">
-	<img class="OLSKRootLinkImage" role="presentation" src="/_shared/LCHRootLink/ui-assets/identity.svg">
+	<img class="OLSKRootLinkImage" role="presentation" src="https://rosano.s3.amazonaws.com/public/launchlet/touch.png">
 </a>
 
 
