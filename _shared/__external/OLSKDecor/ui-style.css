@@ -11,6 +11,8 @@
 	--OLSKCommonBackground: white;
 	--OLSKCommonForeground: black;
 
+	--OLSKInputBackground: var(--OLSKCommonBackground);
+
 	--OLSKCommonBorderColor: rgba(0, 0, 0, 0.3);
 	--OLSKCommonBorder: 1px solid var(--OLSKCommonBorderColor);
 
@@ -19,6 +21,9 @@
 
 	--OLSKCommonInteractiveFill: hsl(0, 0%, 90%);
 
+	--OLSKChunkHeadingBorderColor: #cccccc;
+	--OLSKChunkHeadingBackground: #e9e9e9;
+
 	--OLSKCommonInputPadding: 5px;
 
 	--OLSKSharedPadding: 4px;
@@ -26,12 +31,16 @@
 
 	--OLSKSectionSpacing: 2em;
 
-	--OLSKMasterListItemSelectedColorDefault: #e6e6e6;
-	--OLSKMasterListItemSelectedColorActive: #1a81ff;
-	--OLSKMasterListItemSelectedColorActiveInverse: white;
+	--OLSKCollectionItemsLocusColorDefault: #e6e6e6;
+	--OLSKCollectionItemsLocusColorActive: #1a81ff;
+	--OLSKCollectionItemsLocusColorActiveInverse: white;
 
 	--OLSKAlertColor: #eeeeee;
-	--OLSKCodeColor: hsl(0, 0%, 20%);
+	
+	--OLSKCodeBackground: #eeeeee;
+	--OLSKCodeForeground: #333;
+
+	--OLSKStickyHeaderTop: 0;
 }
 
 /* OLSKCommonEdge */
@@ -84,7 +93,7 @@
 .OLSKStickyHeader {
 	position: -webkit-sticky;
 	position: sticky;
-	top: 0;
+	top: var(--OLSKStickyHeaderTop);
 }
 
 /* OLSKViewport */
@@ -298,39 +307,43 @@
 	-webkit-overflow-scrolling: touch;
 }
 
-/* OLSKMasterList */
+/* OLSKNarrow */
 
-.OLSKIsLoading .OLSKMasterListBody {
+.OLSKIsLoading .OLSKNarrowBody {
 	visibility: hidden;
 }
 
-.OLSKMasterList {
-	/* OLSKMasterListFlexbox:Parent */
+.OLSKNarrow {
+	/* OLSKNarrowFlexbox:Parent */
 	display: flex;
 	flex-direction: column;
 }
 
-.OLSKMasterListToolbar {
-	/* OLSKMasterListFlexbox:Child */
+.OLSKNarrowToolbar {
+	/* OLSKNarrowFlexbox:Child */
 	flex-shrink: 0;
 }
 
-.OLSKMasterListBody {
+.OLSKNarrowBody {
 	overflow: auto;
 	
-	/* OLSKMasterListFlexbox:Child */
+	/* OLSKNarrowFlexbox:Child */
 	flex-grow: 1;
 }
 
-.OLSKMasterListBody .OLSKResultsListItemSelected .OLSKMasterListItem {
-	background: var(--OLSKMasterListItemSelectedColorDefault);
+.OLSKNarrowBody .OLSKCollection {
+	flex-shrink: 0;
+}
+
+.OLSKNarrowBody .OLSKCollectionItemLocus {
+	background: var(--OLSKCollectionItemsLocusColorDefault);
 }
 
 @media screen and (min-width: 760px) {
 
-.OLSKMasterListFocused .OLSKResultsListItemSelected .OLSKMasterListItem {
-	background: var(--OLSKMasterListItemSelectedColorActive);
-	color: var(--OLSKMasterListItemSelectedColorActiveInverse);
+.OLSKNarrowFocused .OLSKCollectionItemLocus {
+	background: var(--OLSKCollectionItemsLocusColorActive);
+	color: var(--OLSKCollectionItemsLocusColorActiveInverse);
 }
 
 }
@@ -424,8 +437,8 @@
 }
 
 .OLSKDecor input[type="text"], .OLSKDecor textarea, .OLSKDecorInput {	
-	background: var(--OLSKCommonBackground) !important;
-	border-color: var(--OLSKCommonBorderColor) !important;
+	background: var(--OLSKInputBackground) !important;
+	border-color: var(--OLSKCommonEdgeColor) !important;
 
 	/* OLSKMobileSafariRemoveDefaultInputStyle */
 	-webkit-appearance: none;
@@ -433,7 +446,7 @@
 	appearance: none;
 }
 
-.OLSKDecor input, .OLSKDecor textarea {	
+.OLSKDecor input, .OLSKDecor textarea, .OLSKDecorInput {	
 	border: var(--OLSKCommonEdgeBorder);
 
 	color: var(--OLSKCommonForeground);
@@ -444,7 +457,7 @@
 }
 
 a.OLSKDecorPress {
-	color: var(--OLSKCommonForeground);
+	color: black;
 	text-decoration: none;
 }
 
@@ -470,8 +483,8 @@ a.OLSKDecorPress {
 	padding: var(--OLSKSharedPadding);
 	border-radius: var(--OLSKBorderRadius);
 
-	background: var(--OLSKAlertColor);
-	color: var(--OLSKCodeColor);
+	background: var(--OLSKCodeBackground);
+	color: var(--OLSKCodeForeground);
 }
 
 /* OLSKDecorNotice */
@@ -739,4 +752,42 @@ a.OLSKDecorPress {
 
 .OLSKDecorGlossary dd {
 	margin: 10px 0;
+}
+
+/* OLSKCollectionChunkHeading */
+
+.OLSKCollectionChunkHeading {
+	padding: 6px;
+	outline: var(--OLSKChunkHeadingBorderColor) solid 1px;
+
+	font-weight: bold;
+	color: var(--OLSKCommonForeground);
+	background: var(--OLSKChunkHeadingBackground);
+}
+
+/* OLSKCollectionItemStash */
+
+.OLSKCollectionItemStash .OLSKCollectionItemStashStatus {
+	background: var(--OLSKCommonForeground);
+}
+
+.OLSKCollectionItemStashStatus {
+	--OLSKCollectionItemStashStatusSize: 23px;
+	
+	display: block;
+	width: var(--OLSKCollectionItemStashStatusSize);
+	height: var(--OLSKCollectionItemStashStatusSize);
+	border: 1px solid var(--OLSKCommonForeground);
+	border-radius: calc(var(--OLSKCollectionItemStashStatusSize) / 2 + 1px);
+
+	margin: 10px;
+	margin-right: 0;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.OLSKCollectionItemStashStatusImage * {
+	stroke: var(--OLSKCommonBackground);
 }
