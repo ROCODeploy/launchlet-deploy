@@ -436,7 +436,7 @@
 	border-radius: var(--OLSKBorderRadius);
 }
 
-.OLSKDecor input[type="text"], .OLSKDecor textarea, .OLSKDecorInput {	
+.OLSKDecor input[type="text"], .OLSKDecor input[type="email"], .OLSKDecor textarea, .OLSKDecorInput {	
 	background: var(--OLSKInputBackground) !important;
 	border-color: var(--OLSKCommonEdgeColor) !important;
 
@@ -452,12 +452,20 @@
 	color: var(--OLSKCommonForeground);
 }
 
+.OLSKDecor input::placeholder, .OLSKDecor textarea::placeholder, .OLSKDecorInput::placeholder {	
+	color: var(--OLSKCommonEdgeColor);
+}
+
 .OLSKDecor button, .OLSKDecorPress, .OLSKDecor input[type="submit"] {
 	background: var(--OLSKCommonInteractiveFill);
 }
 
+.OLSKDecor a {	
+	color: var(--OLSKCommonLinkColor);
+}
+
 a.OLSKDecorPress {
-	color: black;
+	color: var(--OLSKCommonForeground);
 	text-decoration: none;
 }
 
@@ -664,7 +672,7 @@ a.OLSKDecorPress {
 	margin-top: 0;
 }
 
-.OLSKDecorBigForm input[type=text], .OLSKDecorBigForm textarea {
+.OLSKDecorBigForm input[type=text], .OLSKDecorBigForm input[type=email], .OLSKDecorBigForm textarea {
 	width: 90%;
 	padding: calc(var(--OLSKSharedPadding) * 2);
 }
