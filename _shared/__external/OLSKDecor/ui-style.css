@@ -1,5 +1,9 @@
 :root {
-	--OLSKCommonContainerPadding: 10px;
+	--OLSKDecorBackgroundDeep: default;
+	--OLSKDecorBackgroundDeepEdge: default;
+
+	--OLSKDecorPadding: 10px;
+	--OLSKDecorContainerPadding: 10px;
 	--OLSKCommonContainerMaxWidth: 420px;
 
 	--OLSKCommonFontFamily: 'Lucida Grande', sans-serif;
@@ -8,16 +12,20 @@
 	--OLSKCommonHeadingFontFamily: 'Helvetica Neue';
 	--OLSKCommonQuoteFontFamily: 'Georgia', serif;
 
+	--OLSKDecorBackgroundDark: #eeeeee;
+	--OLSKDecorForegroundLight: #ddd;
 	--OLSKCommonBackground: white;
 	--OLSKCommonForeground: black;
+	--OLSKDecorFormBlendBackground: var(--OLSKCommonBackground);
+	--OLSKDecorFormBlendBorderColor: var(--OLSKCommonForeground);
+	--OLSKDecorFormBlendBorder: 1px solid var(--OLSKDecorFormBlendBorderColor);
 
-	--OLSKInputBackground: var(--OLSKCommonBackground);
-
+	--OLSKDecorBorderColor: var(--OLSKCommonForeground);
+	--OLSKDecorBorder: 1px solid var(--OLSKDecorBorderColor);
 	--OLSKCommonBorderColor: rgba(0, 0, 0, 0.3);
 	--OLSKCommonBorder: 1px solid var(--OLSKCommonBorderColor);
 
-	--OLSKCommonEdgeColor: #ddd;
-	--OLSKCommonEdgeBorder: 1px solid var(--OLSKCommonEdgeColor);
+	--OLSKCommonEdgeBorder: 1px solid var(--OLSKDecorForegroundLight);
 
 	--OLSKCommonInteractiveFill: hsl(0, 0%, 90%);
 
@@ -35,12 +43,15 @@
 	--OLSKCollectionItemsLocusColorActive: #1a81ff;
 	--OLSKCollectionItemsLocusColorActiveInverse: white;
 
-	--OLSKAlertColor: #eeeeee;
 	
 	--OLSKCodeBackground: #eeeeee;
 	--OLSKCodeForeground: #333;
 
 	--OLSKStickyHeaderTop: 0;
+}
+
+body {
+	background: var(--OLSKDecorBackgroundDeep);
 }
 
 /* OLSKCommonEdge */
@@ -188,6 +199,17 @@
 	display: none !important;
 }
 
+.OLSKVisibilityDesktopScreenreader {
+	display: unset !important;
+
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
 }
 
 /* OLSKToolbar */
@@ -299,7 +321,7 @@
 
 .OLSKDecorButtonNoStyle {
 	background: none;
-	border: none;
+	border: none !important;
 	padding: 0;
 }
 
@@ -347,7 +369,7 @@
 /* OLSKDecor */
 
 .OLSKDecor {
-	padding: var(--OLSKCommonContainerPadding);
+	padding: var(--OLSKDecorContainerPadding);
 
 	background: var(--OLSKCommonBackground);
 	font-family: var(--OLSKCommonFontFamily);
@@ -361,20 +383,15 @@
 	margin: auto;
 }
 
-@media screen and (min-width: 760px) {
-
-	.OLSKDecorCapped {
-		padding-top: 0;
-	}
-
+.OLSKDecorNoTopPad {
+	padding-top: 0;
 }
 
 .OLSKDecorOutline {
-	--OLSKCommonContainerPadding: 20px;
+	--OLSKDecorCappedBorder: 1px solid var(--OLSKDecorBackgroundDeepEdge);
 
-	border: var(--OLSKCommonBorder);
-	border-top: none;
-	border-bottom: none;
+	border-right: var(--OLSKDecorCappedBorder) !important;
+	border-left: var(--OLSKDecorCappedBorder) !important;
 }
 
 @media (max-width: 450px) {
@@ -389,7 +406,7 @@
 
 .OLSKDecor h1 {
 	padding-bottom: var(--OLSKSharedPadding);
-	border-bottom: var(--OLSKCommonEdgeBorder);
+	border-bottom: var(--OLSKDecorBorder);
 
 	margin-top: var(--OLSKSectionSpacing);
 
@@ -404,10 +421,19 @@
 	padding-left: 30px;
 }
 
+.OLSKDecor img:not(* img) {
+	max-width: calc(100% - var(--OLSKDecorPadding) * 2);
+
+	border: var(--OLSKDecorBorder);
+	border-width: var(--OLSKDecorPadding);
+	border-color: var(--OLSKDecorForegroundLight);
+	border-radius: var(--OLSKBorderRadius);
+}
+
 .OLSKDecor blockquote {
 	margin-left: 0;
-	padding-left: var(--OLSKCommonContainerPadding);
-	border-left: var(--OLSKCommonBorder);
+	padding-left: var(--OLSKDecorPadding);
+	border-left: var(--OLSKDecorBorder);
 
 	font-style: oblique;
 	font-family: var(--OLSKCommonQuoteFontFamily);
@@ -418,7 +444,7 @@
 	height: 1px;
 	border: none;
 
-	background: var(--OLSKCommonForeground);
+	background: var(--OLSKDecorBorderColor);
 }
 
 .OLSKDecor table {
@@ -430,8 +456,11 @@
 
 .OLSKDecor table tr td {
 	padding: var(--OLSKSharedPadding);
-	border-top: var(--OLSKCommonEdgeBorder);
+	border-top: var(--OLSKDecorBorder);
+	border-color: var(--OLSKDecorForegroundLight);
 }
+
+/* form */
 
 .OLSKDecor input, .OLSKDecor button, .OLSKDecorPress, .OLSKDecor input[type="submit"], .OLSKDecor textarea, .OLSKDecorInput {	
 	display: inline-block;
@@ -441,23 +470,10 @@
 }
 
 .OLSKDecor input[type="text"], .OLSKDecor input[type="email"], .OLSKDecor textarea, .OLSKDecorInput {	
-	background: var(--OLSKInputBackground) !important;
-	border-color: var(--OLSKCommonEdgeColor) !important;
-
 	/* OLSKMobileSafariRemoveDefaultInputStyle */
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-}
-
-.OLSKDecor input, .OLSKDecor textarea, .OLSKDecorInput {	
-	border: var(--OLSKCommonEdgeBorder);
-
-	color: var(--OLSKCommonForeground);
-}
-
-.OLSKDecor input::placeholder, .OLSKDecor textarea::placeholder, .OLSKDecorInput::placeholder {	
-	color: var(--OLSKCommonEdgeColor);
 }
 
 .OLSKDecor button, .OLSKDecorPress, .OLSKDecor input[type="submit"] {
@@ -484,9 +500,9 @@ a.OLSKDecorPress {
 }
 
 .OLSKDecorPressDestroy {
-	border-color: #800002;
+	border-color: #800002 !important;
 	background: #ffefef !important;
-	color: #800002;
+	color: #800002 !important;
 }
 
 .OLSKDecor code {
@@ -498,13 +514,25 @@ a.OLSKDecorPress {
 	color: var(--OLSKCodeForeground);
 }
 
+.OLSKDecor :disabled {
+	opacity: 0.5;
+}
+
+/* OLSKDecorTitle */
+
+.OLSKDecorTitle {
+	font-weight: bold;
+	font-family: var(--OLSKCommonHeadingFontFamily);
+	font-size: calc(var(--OLSKCommonFontSize) * 2);
+}
+
 /* OLSKDecorNotice */
 
 .OLSKDecorNotice {
-	padding: var(--OLSKCommonContainerPadding);
-	border: 1px solid var(--OLSKCommonForeground);
+	padding: var(--OLSKDecorPadding);
+	border: var(--OLSKDecorBorder);
 
-	margin: calc(var(--OLSKCommonContainerPadding) * 2) 0;
+	margin: calc(var(--OLSKDecorPadding) * 2) 0;
 }
 
 .OLSKDecorNotice p:first-child {
@@ -516,9 +544,52 @@ a.OLSKDecorPress {
 }
 
 .OLSKCommonAlert {
-	padding: var(--OLSKCommonContainerPadding);
+	padding: var(--OLSKDecorPadding);
 
-	background: var(--OLSKAlertColor);
+	background: var(--OLSKDecorBackgroundDark);
+}
+
+/* OLSKDecorCompareTable */
+
+.OLSKDecorCompareTable th, .OLSKDecorCompareTable td {
+	padding: 10px !important;
+	vertical-align: top;
+}
+
+.OLSKDecorCompareTable td:first-child {
+	width: 45%;
+}
+
+.OLSKDecorCompareTable td:not(:first-child) {
+	text-align: center;
+}
+
+.OLSKDecorCompareTable tr:nth-child(2n) {
+	background: hsl(0, 0%, 95%);
+}
+
+.OLSKDecorCompareTable small {
+	display: block;
+
+	margin-top: 8px;
+}
+
+/* OLSKDecorAction */
+
+.OLSKDecorAction {
+	text-align: center;
+	background: #ddd !important;
+	border: none !important;
+}
+
+.OLSKDecorAction :first-child {
+	display: block;
+	
+	font-size: calc(var(--OLSKCommonFontSize) * 2.5);
+}
+
+.OLSKDecorAction * {
+	margin: 10px !important;
 }
 
 /* OLSKCommonTie */
@@ -622,11 +693,11 @@ a.OLSKDecorPress {
 /* OLSKTestimonialListItem */
 
 .OLSKTestimonialListItem {
-	padding: var(--OLSKCommonContainerPadding);
+	padding: var(--OLSKDecorPadding);
 
 	margin: calc(var(--OLSKSectionSpacing) / 2) 0;
 
-	background: var(--OLSKCommonInteractiveFill);
+	background: var(--OLSKDecorBackgroundDark);
 }
 
 .OLSKTestimonialListItemAuthor {
@@ -647,11 +718,11 @@ a.OLSKDecorPress {
 
 .OLSKCommonVideoListItem {
 	--OLSKCommonVideoBorderWidth: 13;
-	--OLSKCommonVideoWide: 750;
-	--OLSKCommonVideoHigh: 1334;
+	--OLSKCommonVideoWide: 1440;
+	--OLSKCommonVideoHigh: 800;
 	
 	padding-top: calc(((var(--OLSKCommonVideoHigh) + var(--OLSKCommonVideoBorderWidth) * var(--OLSKCommonVideoBorderWidth)) / (var(--OLSKCommonVideoWide) + var(--OLSKCommonVideoBorderWidth) * var(--OLSKCommonVideoBorderWidth))) * 100.00%);
-	border: calc(var(--OLSKCommonVideoBorderWidth) * 1px) var(--OLSKCommonInteractiveFill) solid;
+	border: calc(var(--OLSKCommonVideoBorderWidth) * 1px) var(--OLSKDecorForegroundLight) solid;
 	border-radius: var(--OLSKBorderRadius);
 
   position: relative;
@@ -667,6 +738,29 @@ a.OLSKDecorPress {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.OLSKCommonVideoListItemMobile {
+	--OLSKCommonVideoWide: 750;
+	--OLSKCommonVideoHigh: 1334;
+}
+
+.OLSKCommonVideoListItemSquare {
+	--OLSKCommonVideoWide: 730;
+	--OLSKCommonVideoHigh: 540;
+}
+
+/* OLSKDecorFormBlend */
+
+.OLSKDecorFormBlend input, .OLSKDecorFormBlend button:not(.OLSKDecorButtonNoStyle), .OLSKDecorFormBlend .OLSKDecorPress, .OLSKDecorFormBlend input[type="submit"], .OLSKDecorFormBlend textarea, .OLSKDecorFormBlend .OLSKDecorInput {	
+	border: var(--OLSKDecorFormBlendBorder);
+	
+	background: var(--OLSKDecorFormBlendBackground);
+	color: var(--OLSKCommonForeground);
+}
+
+.OLSKDecorFormBlend input::placeholder, .OLSKDecorFormBlend textarea::placeholder, .OLSKDecorFormBlend .OLSKDecorInput::placeholder {	
+	color: var(--OLSKDecorForegroundLight);
 }
 
 /* OLSKDecorBigForm */
@@ -689,9 +783,11 @@ a.OLSKDecorPress {
 }
 
 .OLSKDecorBigForm hr {
-	margin: 0;
 	width: 90%;
-	background: var(--OLSKCommonEdgeColor);
+
+	margin: 0;
+
+	opacity: 0.5;
 }
 
 /* OLSKDecorX */
@@ -721,11 +817,6 @@ a.OLSKDecorPress {
 
 .OLSKDecorX * {
  max-width: 100%;
-}
-
-.OLSKDecorX img {
-    border: 5px var(--OLSKCommonInteractiveFill) solid;
-    border-radius: var(--OLSKBorderRadius);
 }
 
 /* OLSKDecorSilentLink */
@@ -955,4 +1046,32 @@ a.OLSKDecorPress {
 
 .ROCOForum a  {
 	border-color: var(--OLSKDecorModuleForeground) !important;
+}
+
+/* ROCOStandardView */
+
+.ROCOStandardView {
+	display: flex;
+	flex-direction: column;
+}
+
+.ROCOStandardViewHead {
+	/* ROCOStandardViewFlexbox:Child */
+	flex-shrink: 0;
+}
+
+.ROCOStandardViewBody {
+	/* ROCOStandardViewFlexbox:Child */
+	flex-grow: 1;
+
+	display: flex;
+	flex-direction: column;
+}
+
+@media screen and (min-width: 760px) {
+
+	.ROCOStandardViewBody {
+		overflow: auto;
+	}
+
 }
