@@ -16,7 +16,8 @@
         oldIE = true;
     }
     
-    var _crypto = window.crypto || window.msCrypto;
+    var _crypto = window.crypto || window.msCrypto
+if (!_crypto) return;
     var _cryptoSubtle = _crypto.subtle || _crypto.webkitSubtle;
     var _indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
         
